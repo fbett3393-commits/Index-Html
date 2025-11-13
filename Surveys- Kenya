@@ -1,0 +1,310 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Surveys Kenya — Pay Ksh50 to Unlock</title>
+  <style>
+    :root{--accent:#0b74ff}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f8fb;color:#0b1020}
+    .container{max-width:980px;margin:32px auto;padding:24px;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(20,30,60,0.06)}
+    header{display:flex;align-items:center;gap:16px}
+    .badge{background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px;font-weight:600}
+    h1{margin:0;font-size:24px}
+    p.lead{color:#334155}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:18px}
+    .card{background:#fbfdff;border-radius:10px;padding:16px;border:1px solid #eef2ff}
+    .muted{color:#64748b;font-size:14px}
+    label{display:block;margin-top:10px;font-weight:600}
+    input[type=text],textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef8;margin-top:6px}
+    button{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;border:0;font-weight:700;cursor:pointer}
+    .small{font-size:13px}
+    .success{background:#ecfdf5;border:1px solid #bbf7d0;padding:10px;border-radius:8px;color:#065f46}
+    .danger{background:#fff1f2;border:1px solid #fecaca;padding:10px;border-radius:8px;color:#991b1b}
+    .center{text-align:center}
+    footer{margin-top:18px;color:#94a3b8;font-size:13px}
+    .admin-link{font-size:13px;color:var(--accent);cursor:pointer;text-decoration:underline}
+    pre{background:#0b1020;color:#e6eef8;padding:12px;border-radius:8px;overflow:auto}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">Surveys Kenya</div>
+      <div>
+        <h1>Surveys Kenya — Pay Ksh50 to Unlock</h1>
+        <p class="lead">Quick 5-question surveys. Pay Ksh50 by M-PESA to unlock each survey. Enter your M-PESA transaction code to gain access.</p>
+      </div>
+    </header><div class="grid">
+  <main>
+    <div class="card">
+      <h3>How it works</h3>
+      <ol class="small muted">
+        <li>Send <strong>Ksh50</strong> via M-PESA to <strong>0759163821</strong>.</li>
+        <li>Copy the M-PESA transaction code (e.g. <em>ABC123XYZ</em>).</li>
+        <li>Enter your phone number and transaction code below and click <strong>Verify & Unlock</strong>.</li>
+        <li>Once verified we'll unlock the 5-question survey for you to answer.</li>
+      </ol>
+
+      <hr />
+
+      <div id="messages"></div>
+
+      <label for="phone">Your phone number (used for verification)</label>
+      <input id="phone" placeholder="07XXXXXXXX" />
+
+      <label for="tx">M-PESA Transaction Code</label>
+      <input id="tx" placeholder="e.g. ABC123XYZ" />
+
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button id="verifyBtn">Verify & Unlock</button>
+        <button id="payBtn" type="button">How to Pay (instructions)</button>
+      </div>
+
+      <div id="unlockArea" style="margin-top:16px;display:none">
+        <div class="success">Payment recorded — survey unlocked. Please answer the 5 questions below.</div>
+
+        <form id="surveyForm" style="margin-top:12px">
+          <label>1. What is your age?</label>
+          <input name="q1" required placeholder="e.g. 23" />
+
+          <label>2. What is your gender?</label>
+          <select name="q2" required>
+            <option value="">-- choose --</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+            <option>Other</option>
+          </select>
+
+          <label>3. How often do you use M-PESA?</label>
+          <select name="q3" required>
+            <option value="">-- choose --</option>
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Rarely</option>
+          </select>
+
+          <label>4. Which brand do you prefer for data bundles?</label>
+          <input name="q4" required placeholder="e.g. Safaricom, Airtel" />
+
+          <label>5. Any feedback about our services?</label>
+          <textarea name="q5" rows="3" placeholder="Your feedback..." /></textarea>
+
+          <div style="margin-top:12px">
+            <button type="submit">Submit Survey</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Recent submissions (local preview)</h3>
+      <div class="muted small">This area shows submissions stored locally in your browser. Admins should export regularly.</div>
+      <div id="submissionsList" style="margin-top:10px"></div>
+      <div style="margin-top:10px">
+        <button id="exportBtn">Export CSV (Download)</button>
+        <button id="clearBtn" style="background:#ef4444">Clear local data</button>
+      </div>
+    </div>
+
+  </main>
+
+  <aside>
+    <div class="card">
+      <h3>Payment — M-PESA</h3>
+      <p class="muted">Send <strong>Ksh50</strong> to the number below. Use <strong>"SURVEY50"</strong> as the account (or your phone number). Copy the transaction code and use it to unlock the survey.</p>
+      <pre>0759163821
+
+Amount: Ksh50 Account: SURVEY50</pre>
+
+<div style="margin-top:8px">
+        <button id="copyNo">Copy Number</button>
+      </div>
+
+      <hr />
+
+      <h4>Admin</h4>
+      <p class="small muted">Admin can export submissions and verify M-PESA payments manually from the list. To access the admin view enter password: <strong>admin123</strong></p>
+      <div style="margin-top:8px">
+        <input id="adminPass" placeholder="Admin password" />
+        <div style="margin-top:8px"><button id="adminBtn">Open Admin</button></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Notes</h3>
+      <ul class="muted small">
+        <li>This demo uses <strong>localStorage</strong> to keep submissions. For production connect to a backend or Firebase (instructions in the code).</li>
+        <li>To deploy: push this file to a GitHub repo and enable GitHub Pages (or host on Vercel/Netlify).</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<footer class="center">
+  <small>Built for Surveys Kenya • Pay Ksh50 to unlock • Phone: 0759163821</small>
+</footer>
+
+  </div>  <script>
+    // --- Simple local-only implementation ---
+    const phoneEl = document.getElementById('phone');
+    const txEl = document.getElementById('tx');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const messages = document.getElementById('messages');
+    const unlockArea = document.getElementById('unlockArea');
+    const surveyForm = document.getElementById('surveyForm');
+    const submissionsList = document.getElementById('submissionsList');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copyNo = document.getElementById('copyNo');
+    const payBtn = document.getElementById('payBtn');
+    const adminBtn = document.getElementById('adminBtn');
+    const adminPass = document.getElementById('adminPass');
+
+    const STORAGE_KEY = 'surveys_kenya_submissions_v1';
+
+    function showMessage(html, type=''){
+      messages.innerHTML = `<div class="${type=='error'?'danger':''}${type=='success'?'success':''}">${html}</div>`;
+    }
+
+    function loadSubmissions(){
+      try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      }catch(e){return []}
+    }
+    function saveSubmission(obj){
+      const arr = loadSubmissions();
+      arr.unshift(obj);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+      renderSubmissions();
+    }
+
+    function renderSubmissions(){
+      const arr = loadSubmissions();
+      if(!arr.length){
+        submissionsList.innerHTML = '<div class="muted small">No submissions yet.</div>';
+        return;
+      }
+      submissionsList.innerHTML = '<ol style="padding-left:18px">' + arr.slice(0,10).map(s=>`<li class="small">${s.phone} — ${s.tx} — <em>${new Date(s.time).toLocaleString()}</em></li>`).join('') + '</ol>';
+    }
+
+    verifyBtn.addEventListener('click', ()=>{
+      const phone = phoneEl.value.trim();
+      const tx = txEl.value.trim();
+      if(!phone || !tx){ showMessage('Please enter phone number and transaction code.', 'error'); return; }
+
+      // Simple client-side "verification": accept codes that are at least 6 chars.
+      if(tx.length < 5){ showMessage('Transaction code looks invalid. Check and try again.', 'error'); return; }
+
+      // Record payment record locally (in production you'd verify via Safaricom Daraja API)
+      const paymentRecord = { phone, tx, time: Date.now(), verified: true };
+      const payments = JSON.parse(localStorage.getItem('surveys_kenya_payments') || '[]');
+      payments.unshift(paymentRecord);
+      localStorage.setItem('surveys_kenya_payments', JSON.stringify(payments));
+
+      showMessage('Payment recorded locally. Survey unlocked.', 'success');
+      unlockArea.style.display = 'block';
+      // store unlocking token so the user can submit once
+      sessionStorage.setItem('surveys_unlocked_for', phone);
+    });
+
+    surveyForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const phone = sessionStorage.getItem('surveys_unlocked_for');
+      if(!phone){ showMessage('You must pay and unlock the survey first.', 'error'); return; }
+
+      const form = new FormData(surveyForm);
+      const obj = {
+        phone,
+        tx: (txEl.value||'').trim(),
+        q1: form.get('q1'),
+        q2: form.get('q2'),
+        q3: form.get('q3'),
+        q4: form.get('q4'),
+        q5: form.get('q5'),
+        time: Date.now()
+      };
+      saveSubmission(obj);
+      showMessage('Thank you — your survey was submitted.', 'success');
+      surveyForm.reset();
+      sessionStorage.removeItem('surveys_unlocked_for');
+      unlockArea.style.display = 'none';
+    });
+
+    exportBtn.addEventListener('click', ()=>{
+      const arr = loadSubmissions();
+      if(!arr.length){ alert('No submissions to export.'); return; }
+      const headers = ['phone','tx','q1','q2','q3','q4','q5','time'];
+      const csv = [headers.join(',')].concat(arr.map(r=>headers.map(h=>`"${(r[h]||'').toString().replace(/"/g,'""')}"`).join(','))).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'surveys_kenya_submissions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    clearBtn.addEventListener('click', ()=>{
+      if(!confirm('Clear all local submissions? This cannot be undone.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderSubmissions();
+      alert('Local submissions cleared.');
+    });
+
+    copyNo.addEventListener('click', ()=>{ navigator.clipboard.writeText('0759163821'); alert('Number copied to clipboard'); });
+
+    payBtn.addEventListener('click', ()=>{
+      alert('To pay: Open your M-PESA menu > Lipa na M-PESA > Pay Bill (or Buy Goods & Services) > Enter Till/Paybill: 0759163821, Account: SURVEY50, Amount: 50. Complete payment and copy the transaction code (e.g. ABC123XYZ).');
+    });
+
+    adminBtn.addEventListener('click', ()=>{
+      if(adminPass.value=== 'admin123'){
+        // show admin modal-like behavior: open a new page with full details built from localStorage
+        const arr = loadSubmissions();
+        let html = '<h2>Admin — Submissions</h2>';
+        if(!arr.length) html += '<div class="muted">No submissions.</div>';
+        else{
+          html += '<table border="1" cellpadding="6" cellspacing="0"><tr><th>Phone</th><th>Tx</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Time</th></tr>' + arr.map(r=>`<tr><td>${r.phone}</td><td>${r.tx}</td><td>${escapeHtml(r.q1)}</td><td>${escapeHtml(r.q2)}</td><td>${escapeHtml(r.q3)}</td><td>${escapeHtml(r.q4)}</td><td>${escapeHtml(r.q5)}</td><td>${new Date(r.time).toLocaleString()}</td></tr>`).join('') + '</table>';
+        }
+        const w = window.open('about:blank','_blank');
+        w.document.write('<html><head><title>Admin — Submissions</title></head><body style="font-family:Arial;padding:20px">' + html + '<p><button onclick="window.print()">Print</button></p></body></html>');
+        w.document.close();
+      } else {
+        alert('Wrong admin password');
+      }
+    });
+
+    function escapeHtml(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // initial render
+    renderSubmissions();
+
+    // ===== Instructions & extension notes for production =====
+    /*
+      PRODUCTION (optional) - Connect to Firebase for real storage & auth:
+
+      1. Create a Firebase project at https://console.firebase.google.com
+      2. Add a web app and copy the firebaseConfig object.
+      3. Uncomment and paste the firebaseConfig below, then uncomment firebase initialization and Firestore code blocks.
+
+      Example firebase config (replace with your values):
+
+      // const firebaseConfig = {
+      //   apiKey: "YOUR_API_KEY",
+      //   authDomain: "YOUR_PROJECT.firebaseapp.com",
+      //   projectId: "YOUR_PROJECT_ID",
+      //   storageBucket: "YOUR_PROJECT.appspot.com",
+      //   messagingSenderId: "...",
+      //   appId: "..."
+      // };
+
+      // Then include Firebase scripts and use Firestore to save payments and submissions.
+
+      PRODUCTION (auto-pay) - Daraja API (Safaricom):
+      - To automate payment verification you must integrate Safaricom Daraja (STK Push) on a server.
+      - That server will receive confirmation callbacks from Safaricom and update user's payment status.
+
+      For now this demo records payments locally so you can start testing.
+    */
+  </script></body>
+</html>
